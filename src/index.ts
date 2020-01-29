@@ -43,12 +43,13 @@ export default function(ary?: Source<any>[]) {
 
     // scan the inputs to check whether there is one we can use.
     for (let j = 0; j < len; j++) {
-      const current = inputs[(startPos + j) % len]
+      const currentIndex = (startPos + j) % len
+      const current = inputs[currentIndex]
       if (current.ready && !current.ended) {
         const data = current.popData()
 
         // next time, we send the data from next ready sub-stream
-        startPos++
+        startPos = currentIndex + 1
         cb = undefined
         return _cb(null, data)
       }
@@ -98,10 +99,9 @@ export default function(ary?: Source<any>[]) {
         })
         sync = false
       })(inputs[len])
-
-      // scan the feed
-      check()
     }
+    // scan the feed
+    check()
   }
 
   function read(_abort: Abort, _cb: SourceCallback<any>) {
