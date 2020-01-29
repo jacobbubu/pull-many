@@ -110,7 +110,7 @@ export default function(ary?: Source<any>[]) {
     next()
   }
 
-  read.add = function(stream: Source<any>) {
+  read.add = function(stream?: Source<any>) {
     if (!stream) {
       // the stream will now end when all the streams end.
       capped = true
@@ -119,6 +119,10 @@ export default function(ary?: Source<any>[]) {
     }
     inputs.push(create(stream))
     next()
+  }
+
+  read.cap = function() {
+    read.add()
   }
 
   return read
